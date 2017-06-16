@@ -19,11 +19,7 @@ class bydlo_o : public zalazek
 {
 public:
 	virtual obsada* produkuj();
-	char rasa[10];
-	char plec[10];
-	float wiek;
-	int masa;
-	int stan;
+	
 };
 
 #pragma once
@@ -35,6 +31,12 @@ public:
 	byk();
 	virtual ~byk();
 	virtual void glos() {cout << "MuuuuMuuuu" << endl;}
+	char nazwa[10];
+	char rasa[10];
+	char plec[10];
+	float wiek;
+	float masa;
+	int stan;
 };
 
 #pragma once
@@ -46,6 +48,11 @@ public:
 	fortschritt();
 	virtual ~fortschritt();
 	virtual void odglos() {cout << "bruumbruum" << endl;}
+	char marka[10];
+	char model[10];
+	float rocznik;
+	float moc;
+	int stan;
 };
 
 #pragma once
@@ -56,11 +63,7 @@ class kombajn_f : public producent_s
 {
 public:
 	virtual maszyna_s* zbuduj();
-	char marka[10];
-	char model[10];
-	int rocznik;
-	int moc;
-	int stan;
+	
 };
 
 #pragma once
@@ -74,6 +77,23 @@ public:
 };
 
 #pragma once
+#include "obsada.h"
+
+class maciora : public obsada
+{
+public:
+	maciora();
+	virtual ~maciora();
+	virtual void glos() {cout << "łiiiłii" << endl;}
+	char nazwa[10];
+	char rasa[10];
+	char plec[10];
+	float wiek;
+	float masa;
+	int stan;
+};
+
+#pragma once
 #include <iostream>
 using namespace std;
 
@@ -83,6 +103,11 @@ public:
 	maszyna_s();
 	virtual ~maszyna_s();
 	virtual void odglos()=0;
+	char marka[10];
+	char model[10];
+	float rocznik;
+	float moc;
+	int stan;
 };
 
 #pragma once
@@ -106,6 +131,12 @@ public:
 	obsada();
 	virtual ~obsada();
 	virtual void glos()=0;
+	char nazwa[10];
+	char rasa[10];
+	char plec[10];
+	float wiek;
+	float masa;
+	int stan;
 };
 
 #pragma once
@@ -117,7 +148,6 @@ public:
 	podorywkowy();
 	virtual ~podorywkowy();
 };
-
 
 #pragma once
 class pole
@@ -151,7 +181,6 @@ public:
 	virtual ~producent_z(){}
 };
 
-
 #pragma once
 #include "producent_s.h"
 #include "zetor.h"
@@ -160,11 +189,18 @@ class traktor_z :public producent_s
 {
 public:
 	virtual maszyna_s* zbuduj();
-	char marka[10];
-	char model[10];
-	int rocznik;
-	int moc;
-	int stan;
+	
+};
+
+#pragma once
+#include "zalazek.h"
+#include "maciora.h"
+
+class trzoda_m : public zalazek
+{
+public:
+	virtual obsada* produkuj();
+	
 };
 
 #pragma once
@@ -175,11 +211,8 @@ class trzoda_t : public zalazek
 {
 public:
 	virtual obsada* produkuj();
-	char rasa[10];
-	char plec[10];
-	int wiek;
-	int masa;
-	int stan;
+	
+	
 };
 
 #pragma once
@@ -191,6 +224,12 @@ public:
 	tucznik();
 	virtual ~tucznik();
 	virtual void glos() {cout << "łiiiłii" << endl;}
+	char nazwa[10];
+	char rasa[10];
+	char plec[10];
+	float wiek;
+	float masa;
+	int stan;
 };
 
 #pragma once
@@ -199,6 +238,7 @@ public:
 class zalazek
 {
 public:
+	
 	virtual obsada* produkuj()=0;
 	virtual ~zalazek(){}
 };
@@ -212,24 +252,31 @@ public:
 	zetor();
 	virtual ~zetor();
 	virtual void odglos() {cout << "bruumbruum" << endl;}
+	char marka[10];
+	char model[10];
+	float rocznik;
+	float moc;
+	int stan;
 };
-
-
-
 
 #include <iostream>
 #include <vector>
 #include <ctime>
 #include <cstdlib>
+#include <cstring>
 
 #include "trzoda_t.h"
+
 #include "bydlo_o.h"
+#include "trzoda_m.h"
 #include "traktor_z.h"
 #include "kombajn_f.h"
 #include "agregat_p.h"
 
 #include "tucznik.h"
+
 #include "byk.h"
+#include "maciora.h"
 #include "zetor.h"
 #include "fortschritt.h"
 #include "podorywkowy.h"
@@ -239,9 +286,9 @@ using namespace std;
 class wytwornia_z
 {
 public:
-	obsada* produkuj()
+	obsada* produkuj(int w)
 	{
-		return zalazki.at(rand()% zalazki.size()) ->produkuj();
+		return zalazki.at(w) ->produkuj();
 	}
 
 	void rejestruj_zalazek(zalazek *zal)
@@ -261,9 +308,9 @@ protected:
 class wytwornia_ms
 {
 public:
-	maszyna_s* zbuduj()
+	maszyna_s* zbuduj(int w)
 	{
-		return producenci_s.at(rand()% producenci_s.size()) ->zbuduj();
+		return producenci_s.at(w) ->zbuduj();
 	}
 
 	void rejestruj_producent_s(producent_s *producents)
@@ -283,9 +330,9 @@ protected:
 class wytwornia_mz
 {
 public:
-	maszyna_z* zabuduj()
+	maszyna_z* zabuduj(int w)
 	{
-		return producenci_z.at(rand()% producenci_z.size()) ->zabuduj();
+		return producenci_z.at(w) ->zabuduj();
 	}
 
 	void rejestruj_producent_z(producent_z *producentz)
@@ -302,13 +349,12 @@ protected:
 	vector<producent_z*> producenci_z;
 };
 
-void wybierz()
-{
-
-}
 
 int main()
 {
+	char klawisz1, klawisz2, klawisz3, klawisz4, rasa[10], plec[10], nazwa[10];
+	int ile, t, e=0, e_s=0;
+	float wiek, masa;
 	srand(time(NULL));
 	wytwornia_z z;
 	wytwornia_ms ms;
@@ -316,11 +362,13 @@ int main()
 
 	z.rejestruj_zalazek(new trzoda_t());
 	z.rejestruj_zalazek(new bydlo_o());
+	z.rejestruj_zalazek(new trzoda_m());
+
 	ms.rejestruj_producent_s(new traktor_z());
 	ms.rejestruj_producent_s(new kombajn_f());
 	mz.rejestruj_producent_z(new agregat_p());
 
-	int klawisz1, klawisz2, klawisz3, klawisz4;
+	
 	vector<obsada*> chlew;
 	vector<maszyna_s*> garaz;
 	vector<maszyna_z*> wiata;
@@ -330,30 +378,81 @@ int main()
 	do
 	{
 		system("cls");
-		cout<<" pracuj ze zwierzetami --> 1/n/n pracuj z maszynami samojezdnymi --> 2/n/n pracuj z pozostałymi maszynami --> 3/n/n pracuj w polu --> 4/n/n zapisz aktualny stan gospodarstwa --> 5/n/n wyjscie --> Q/n/n"<<endl;
-		klawisz1=getchar();
+		cout<<"pracuj ze zwierzetami --> 1"<<endl<<"pracuj z maszynami samojezdnymi --> 2"<<endl<<"pracuj z pozostałymi maszynami --> 3"<<endl<<"pracuj w polu --> 4"<<endl<<"stan gospodarstwa -->5"<<endl<<"wyjscie --> Q"<<endl;
+		cin>>klawisz1;
 		switch(klawisz1)
 		{
 		case '1':
-		
-				cout<<" kup --> 1/n/n sprzedaj --> 2/n/n nakarm --> 3/n/n"<<endl;
-				klawisz2=getchar();
+				system("cls");
+				cout<<"kup --> 1"<<endl<<"sprzedaj --> 2"<<endl<<"nakarm --> 3"<<endl;
+				cin>>klawisz2;
 				switch(klawisz2)
 				{
 					case '1':
-							for(size_t i=0; i<10; ++i)
+							system("cls");
+							ile=0;
+							cout<<"Jakie zwierze chcesz kupic"<<endl;
+							cout<<"tucznik --> 0 "<<endl<<"byk--> 1"<<endl<<"maciora --> 2"<<endl;
+							cin>>t;
+							cout<<"Ile zwierząt chcesz kupić chcesz kupić"<<endl;
+							cin>>ile;
+							cout<<"Podaj nazwe zwierzęcia"<<endl;
+							cin>>nazwa;
+							cout<<"Podaj rase zwierzęcia"<<endl;
+							cin>>rasa;
+							cout<<"Podaj plec [XY/ XX] zwierzęcia"<<endl;
+							cin>>plec;
+							cout<<"Podaj wiek [mies.] zwierzęcia"<<endl;
+							cin>>wiek;
+							cout<<"Podaj masa [kg] zwierzęcia"<<endl;
+							cin>>masa;
+							for(size_t i=0; i< ile; ++i)
 							{
-								chlew.push_back(z.produkuj());
+								chlew.push_back(z.produkuj(t));
+								obsada* szt=chlew.at(e);
+								strcpy(szt->nazwa, nazwa);
+								strcpy(szt->rasa, rasa);
+								strcpy(szt->plec, plec);
+								szt->wiek=wiek;
+								szt->masa=masa;
+								e++;
+							}	
+							system("pause");
+							break;
+					case '2':
+							system("cls");							
+							cout<<"podaj nazwe zwierzecia które chcesz sprzedac"<<endl;
+							cout<<"tucznik/ byk/ maciora"<<endl;
+							cin>>nazwa;
+							for(size_t i=0; i<chlew.size(); ++i)
+							{
+								obsada* szt=chlew.at(i);
+								cout<<szt->nazwa;
+								if(stricmp(szt->nazwa, nazwa)==0)
+								{
+									if(stricmp(nazwa, "tucznik")==0 || stricmp(nazwa, "maciora")==0)
+									{
+										if(szt->masa >= 100)
+											delete chlew.at(i);
+									}
+									else if(stricmp(nazwa, "byk")==0)
+									{
+										if(szt->wiek >=24 )
+											delete chlew.at(i);
+									}
+								}
 							}
+							system("pause");
+/*
 							for(size_t i=0; i<chlew.size(); ++i)
 							{
 								obsada* szt=chlew.at(i);
 								cout << "glos: " <<endl;
 								szt->glos();
 							}
-							system("pause");
-							break;
-					case '2':
+
+*/
+
 							break;
 					case '3':
 							break;
@@ -364,23 +463,43 @@ int main()
 				break;
 		case '2':
 				system("cls");
-				cout<<" kup --> 1/n/n sprzedaj -->2/n/n napraw --> 3/n/n"<<endl;
-				klawisz3=getchar();
+				cout<<" kup --> 1"<<endl<<"sprzedaj -- >2"<<endl<<"napraw --> 3"<<endl<<""<<endl;
+				cin>>klawisz3;
 				switch(klawisz3)
 				{
 						case '1':
-								for(size_t i=0; i<10; ++i)
+								system("cls");
+								cout<<"Jakie maszyny samojezdne chcesz kupic"<<endl;
+								cout<<"zetor--> 0"<<endl<<"fortschritt--> 1"<<endl;
+								cin>>t;
+								ile=0;
+								cout<<"Ile maszyn samojezdnych chcesz kupić"<<endl;
+								cin>>ile;
+								cout<<"Podaj marke maszyny"<<endl;
+								cin>>nazwa;
+								cout<<"Podaj model maszyny"<<endl;
+								cin>>rasa;
+								cout<<"Podaj rocznik maszyny"<<endl;
+								cin>>wiek;
+								cout<<"Podaj moc maszyny"<<endl;
+								cin>>masa;
+								for(size_t i=0; i< ile; ++i)
 								{
-									garaz.push_back(ms.zbuduj());
+									garaz.push_back(ms.zbuduj(t));
+									maszyna_s* szt=garaz.at(e_s);
+									strcpy(szt->marka, nazwa);
+									strcpy(szt->model, rasa);
+									szt->rocznik=wiek;
+									szt->moc=masa;
+									e_s++;
 								}
-								for(size_t i=0; i<garaz.size(); ++i)
-								{
-									maszyna_s* szt_ms=garaz.at(i);
-									cout << "glos: " <<endl;
-									szt_ms->odglos();
-								}
+								system("pause");
 								break;
 						case '2':
+								system("cls");
+								ile=0;
+								cout<<"Ile maszyn samojezdnych chcesz sprzedać"<<endl;
+								cin>>ile;
 								break;
 						case '3':
 								break;
@@ -390,20 +509,23 @@ int main()
 				break;
 		case '3':
 				system("cls");
-				cout<<" kup --> 1/n/n sprzedaj -->2/n/n napraw --> 3/n/n"<<endl;
-				klawisz4=getchar();
+				cout<<" kup --> 1"<<endl<<"sprzedaj -->2"<<endl<<"napraw --> 3"<<endl;
+				cin>>klawisz4;
 				switch(klawisz4)
 				{
 						case '1':
-								for(size_t i=0; i<10; ++i)
+								system("cls");
+								cout<<"Jakie maszyny chcesz kupic"<<endl;
+								cout<<"agregat --> 0 "<<endl;
+								cin>>t;
+								ile=0;
+								cout<<"Ile maszyn chcesz kupić"<<endl;
+								cin>>ile;
+								for(size_t i=0; i<ile; ++i)
 								{
-									wiata.push_back(mz.zabuduj());
+									wiata.push_back(mz.zabuduj(t));
 								}
-								for(size_t i=0; i<wiata.size(); ++i)
-								{
-									maszyna_z* szt_mz=wiata.at(i);
-									cout << "glos: " <<endl;
-								}
+								system("pause");
 								break;
 						case '2':
 								break;
@@ -413,11 +535,38 @@ int main()
 								break;
 				}
 				break;
+		case '4':
+				break;
+		case '5':
+				for(size_t i=0; i<chlew.size(); ++i)
+				{
+					obsada* szt=chlew.at(i);
+					cout<<szt->nazwa<<endl;
+					cout<<szt->rasa<<endl;
+					cout<<szt->plec<<endl;
+					cout<<szt->wiek<<endl;
+					cout<<szt->masa<<endl<<endl;
+				}
+				for(size_t i=0; i<garaz.size(); ++i)
+				{
+					maszyna_s* szt=garaz.at(i);
+					cout<<szt->marka<<endl;
+					cout<<szt->model<<endl;
+					cout<<szt->rocznik<<endl;
+					cout<<szt->moc<<endl<<endl;
+				}/*
+				for(size_t i=0; i<wiata.size(); ++i)
+				{
+					delete wiata.at(i);
+					wiata.clear();
+				}*/
+				system("pause");
+				break;
 		default:
 				break;
 		}
 	}
-	while(klawisz1!=81);
+	while(klawisz1!='Q'  );
 
 
 		for(size_t i=0; i<chlew.size(); ++i)
