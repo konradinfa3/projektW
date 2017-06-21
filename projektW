@@ -6,91 +6,29 @@ class agregat_p : public producent_z
 {
 public:
 	virtual maszyna_z* zabuduj();
-	char nazwa[10];
-	float szerokosc;
-	int stan;
-};
-
-#pragma once
-#include "zalazek.h"
-#include "byk.h"
-
-class bydlo_o : public zalazek
-{
-public:
-	virtual obsada* produkuj();
 	
 };
 
 #pragma once
-#include "obsada.h"
+#include "ziemia.h"
 
-class byk : public obsada
+class grunty
 {
 public:
-	byk();
-	virtual ~byk();
-	virtual void glos() {cout << "MuuuuMuuuu" << endl;}
-	char nazwa[10];
-	char rasa[10];
-	char plec[10];
-	float wiek;
-	float masa;
-	int stan;
-};
-
-#pragma once
-#include "maszyna_s.h"
-
-class fortschritt : public maszyna_s
-{
-public:
-	fortschritt();
-	virtual ~fortschritt();
-	virtual void odglos() {cout << "bruumbruum" << endl;}
-	char marka[10];
-	char model[10];
-	float rocznik;
-	float moc;
-	int stan;
-};
-
-#pragma once
-#include "producent_s.h"
-#include "fortschritt.h"
-
-class kombajn_f : public producent_s
-{
-public:
-	virtual maszyna_s* zbuduj();
 	
+	virtual ziemia* karczuj()=0;
+	virtual ~grunty(){}
 };
 
 #pragma once
-class laka
+#include "grunty.h"
+#include "pole.h"
+
+class grunty_o : public grunty
 {
 public:
-	laka();
-	virtual ~laka();
-	float powierzchnia;
-	int stan;
-};
-
-#pragma once
-#include "obsada.h"
-
-class maciora : public obsada
-{
-public:
-	maciora();
-	virtual ~maciora();
-	virtual void glos() {cout << "łiiiłii" << endl;}
-	char nazwa[10];
-	char rasa[10];
-	char plec[10];
-	float wiek;
-	float masa;
-	int stan;
+	virtual ziemia* karczuj();
+	
 };
 
 #pragma once
@@ -102,9 +40,9 @@ class maszyna_s
 public:
 	maszyna_s();
 	virtual ~maszyna_s();
-	virtual void odglos()=0;
-	char marka[10];
-	char model[10];
+	char nazwa[20];
+	char marka[20];
+	char model[20];
 	float rocznik;
 	float moc;
 	int stan;
@@ -119,10 +57,16 @@ class maszyna_z
 public:
 	maszyna_z();
 	virtual ~maszyna_z();
+	char nazwa[20];
+	char marka[20];
+	char model[20];
+	char funkcja[20];
+	int stan;
 };
 
 #pragma once
 #include <iostream>
+#include <process.h>
 using namespace std;
 
 class obsada
@@ -130,10 +74,9 @@ class obsada
 public:
 	obsada();
 	virtual ~obsada();
-	virtual void glos()=0;
-	char nazwa[10];
-	char rasa[10];
-	char plec[10];
+	char nazwa[20];
+	char rasa[20];
+	char plec[20];
 	float wiek;
 	float masa;
 	int stan;
@@ -147,17 +90,24 @@ class podorywkowy : public maszyna_z
 public:
 	podorywkowy();
 	virtual ~podorywkowy();
+	char nazwa[20];
+	char marka[20];
+	char model[20];
+	char funkcja[20];
+	int stan;
 };
 
 #pragma once
-class pole
+#include "ziemia.h"
+
+class pole : public ziemia
 {
 public:
 	pole();
 	virtual ~pole();
 	float powierzchnia;
 	float nrdzialki;
-	char uprawa[10];
+	char uprawa[20];
 	int stan;
 };
 
@@ -194,25 +144,12 @@ public:
 
 #pragma once
 #include "zalazek.h"
-#include "maciora.h"
-
-class trzoda_m : public zalazek
-{
-public:
-	virtual obsada* produkuj();
-	
-};
-
-#pragma once
-#include "zalazek.h"
 #include "tucznik.h"
 
 class trzoda_t : public zalazek
 {
 public:
-	virtual obsada* produkuj();
-	
-	
+	virtual obsada* produkuj();	
 };
 
 #pragma once
@@ -223,10 +160,10 @@ class tucznik : public obsada
 public:
 	tucznik();
 	virtual ~tucznik();
-	virtual void glos() {cout << "łiiiłii" << endl;}
-	char nazwa[10];
-	char rasa[10];
-	char plec[10];
+	
+	char nazwa[20];
+	char rasa[20];
+	char plec[20];
 	float wiek;
 	float masa;
 	int stan;
@@ -251,11 +188,26 @@ class zetor : public maszyna_s
 public:
 	zetor();
 	virtual ~zetor();
-	virtual void odglos() {cout << "bruumbruum" << endl;}
-	char marka[10];
-	char model[10];
+	char nazwa [20];
+	char marka[20];
+	char model[20];
 	float rocznik;
 	float moc;
+	int stan;
+};
+
+#pragma once
+#include <iostream>
+using namespace std;
+
+class ziemia
+{
+public:
+	ziemia();
+	virtual ~ziemia();
+	float powierzchnia;
+	float nrdzialki;
+	char uprawa[20];
 	int stan;
 };
 
@@ -266,29 +218,22 @@ public:
 #include <cstring>
 
 #include "trzoda_t.h"
-
-#include "bydlo_o.h"
-#include "trzoda_m.h"
 #include "traktor_z.h"
-#include "kombajn_f.h"
 #include "agregat_p.h"
-
+#include "grunty_o.h"
 #include "tucznik.h"
-
-#include "byk.h"
-#include "maciora.h"
 #include "zetor.h"
-#include "fortschritt.h"
 #include "podorywkowy.h"
+#include "pole.h"
 
 using namespace std;
 
 class wytwornia_z
 {
 public:
-	obsada* produkuj(int w)
+	obsada* produkuj()
 	{
-		return zalazki.at(w) ->produkuj();
+		return zalazki.at(0) ->produkuj();
 	}
 
 	void rejestruj_zalazek(zalazek *zal)
@@ -308,9 +253,9 @@ protected:
 class wytwornia_ms
 {
 public:
-	maszyna_s* zbuduj(int w)
+	maszyna_s* zbuduj()
 	{
-		return producenci_s.at(w) ->zbuduj();
+		return producenci_s.at(0) ->zbuduj();
 	}
 
 	void rejestruj_producent_s(producent_s *producents)
@@ -330,9 +275,9 @@ protected:
 class wytwornia_mz
 {
 public:
-	maszyna_z* zabuduj(int w)
+	maszyna_z* zabuduj()
 	{
-		return producenci_z.at(w) ->zabuduj();
+		return producenci_z.at(0) ->zabuduj();
 	}
 
 	void rejestruj_producent_z(producent_z *producentz)
@@ -349,29 +294,52 @@ protected:
 	vector<producent_z*> producenci_z;
 };
 
+class wytwornia_g
+{
+public:
+	ziemia* karczuj()
+	{
+		return grunt.at(0) ->karczuj();
+	}
+
+	void rejestruj_grunty(grunty *grun)
+	{
+		grunt.push_back(grun);
+	}
+	virtual ~wytwornia_g()
+	{
+		for(size_t i=0; i<grunt.size(); ++i)
+			delete grunt.at(i);
+		grunt.clear();
+	}
+protected:
+	vector<grunty*> grunt;
+};
+
 
 int main()
 {
-	char klawisz1, klawisz2, klawisz3, klawisz4, rasa[10], plec[10], nazwa[10];
-	int ile, t, e=0, e_s=0;
-	float wiek, masa;
-	srand(time(NULL));
+	char klawisz1, klawisz2, klawisz3, klawisz4, klawisz5, klawisz6, rasa[20], plec[20], nazwa[20], funkcja[20], marka[20];
+	int ile, e=0, e_s=0, e_z=0, e_g=0;
+	float wiek=0, masa=0, bank=0;
+	srand(unsigned(time(NULL)));
 	wytwornia_z z;
 	wytwornia_ms ms;
 	wytwornia_mz mz;
+	wytwornia_g g;
 
 	z.rejestruj_zalazek(new trzoda_t());
-	z.rejestruj_zalazek(new bydlo_o());
-	z.rejestruj_zalazek(new trzoda_m());
-
+	
 	ms.rejestruj_producent_s(new traktor_z());
-	ms.rejestruj_producent_s(new kombajn_f());
 	mz.rejestruj_producent_z(new agregat_p());
+
+	g.rejestruj_grunty(new grunty_o());
 
 	
 	vector<obsada*> chlew;
 	vector<maszyna_s*> garaz;
 	vector<maszyna_z*> wiata;
+	vector<ziemia*> grunt;
 //-----------------------------------------------------------------------------
 	
 
@@ -391,9 +359,6 @@ int main()
 					case '1':
 							system("cls");
 							ile=0;
-							cout<<"Jakie zwierze chcesz kupic"<<endl;
-							cout<<"tucznik --> 0 "<<endl<<"byk--> 1"<<endl<<"maciora --> 2"<<endl;
-							cin>>t;
 							cout<<"Ile zwierząt chcesz kupić chcesz kupić"<<endl;
 							cin>>ile;
 							cout<<"Podaj nazwe zwierzęcia"<<endl;
@@ -406,9 +371,17 @@ int main()
 							cin>>wiek;
 							cout<<"Podaj masa [kg] zwierzęcia"<<endl;
 							cin>>masa;
-							for(size_t i=0; i< ile; ++i)
+							if(_stricmp(nazwa, "tucznik")==0)
+								bank=bank-ile*masa*float(8);
+							else if(_stricmp(nazwa, "byk")==0)
+								bank=bank-ile*masa*float(10);
+							else if(_stricmp(nazwa, "maciora")==0)
+								bank=bank-ile*masa*float(8);
+							else
+								bank=bank-ile*masa*float(10);
+							for(size_t i=0; i<unsigned(ile); ++i)
 							{
-								chlew.push_back(z.produkuj(t));
+								chlew.push_back(z.produkuj());
 								obsada* szt=chlew.at(e);
 								strcpy(szt->nazwa, nazwa);
 								strcpy(szt->rasa, rasa);
@@ -416,45 +389,75 @@ int main()
 								szt->wiek=wiek;
 								szt->masa=masa;
 								e++;
-							}	
+							}
+							
+							cout<<"Zwierzeta zostaly kupione"<<endl;
 							system("pause");
 							break;
 					case '2':
 							system("cls");							
 							cout<<"podaj nazwe zwierzecia które chcesz sprzedac"<<endl;
-							cout<<"tucznik/ byk/ maciora"<<endl;
 							cin>>nazwa;
 							for(size_t i=0; i<chlew.size(); ++i)
 							{
 								obsada* szt=chlew.at(i);
 								cout<<szt->nazwa;
-								if(stricmp(szt->nazwa, nazwa)==0)
+								if(_stricmp(szt->nazwa, nazwa)==0)
 								{
-									if(stricmp(nazwa, "tucznik")==0 || stricmp(nazwa, "maciora")==0)
+									if(_stricmp(nazwa, "tucznik")==0 || _stricmp(nazwa, "maciora")==0)
 									{
 										if(szt->masa >= 100)
+										{
 											delete chlew.at(i);
+											bank=bank+szt->masa*float(8);
+										}
 									}
-									else if(stricmp(nazwa, "byk")==0)
+									else if(_stricmp(nazwa, "byk")==0)
 									{
 										if(szt->wiek >=24 )
+										{
 											delete chlew.at(i);
+											bank=bank+szt->masa*float(10);
+										}
+									}
+									else 
+									{
+											delete chlew.at(i);
+											bank=bank+szt->masa*float(10);								
 									}
 								}
 							}
+							cout<<"Zwierzeta zostaly sprzedane"<<endl;
 							system("pause");
-/*
+							break;
+					case '3':
 							for(size_t i=0; i<chlew.size(); ++i)
 							{
 								obsada* szt=chlew.at(i);
-								cout << "glos: " <<endl;
-								szt->glos();
+								szt->stan=0;
+								if(_stricmp(nazwa, "tucznik")==0)
+								{
+									szt->masa=szt->masa+float(0.4);
+									bank=bank-float(0.6);
+								}
+								else if(_stricmp(nazwa, "maciora")==0)
+								{
+									szt->masa=szt->masa+float(0.1);
+									bank=bank-float(0.2);
+								}
+								else if(_stricmp(nazwa, "byk")==0)
+								{
+									szt->masa=szt->masa+float(0.6);
+									bank=bank-float(0.8);
+								}
+								else
+								{
+									szt->masa=szt->masa+float(0.6);
+									bank=bank-float(0.8);
+								}
 							}
-
-*/
-
-							break;
-					case '3':
+							cout<<"Zwierzeta zostaly nakarmione"<<endl;
+							system("pause");
 							break;
 					default:
 							break;
@@ -469,39 +472,95 @@ int main()
 				{
 						case '1':
 								system("cls");
-								cout<<"Jakie maszyny samojezdne chcesz kupic"<<endl;
-								cout<<"zetor--> 0"<<endl<<"fortschritt--> 1"<<endl;
-								cin>>t;
+								cout<<"Podaj nazwe maszyny jaką chcesz kupic"<<endl;
+								cin>>nazwa;
 								ile=0;
 								cout<<"Ile maszyn samojezdnych chcesz kupić"<<endl;
 								cin>>ile;
 								cout<<"Podaj marke maszyny"<<endl;
-								cin>>nazwa;
+								cin>>marka;
 								cout<<"Podaj model maszyny"<<endl;
 								cin>>rasa;
 								cout<<"Podaj rocznik maszyny"<<endl;
 								cin>>wiek;
 								cout<<"Podaj moc maszyny"<<endl;
 								cin>>masa;
-								for(size_t i=0; i< ile; ++i)
+								bank=bank-float(150000)*ile;
+								for(size_t i=0; i<unsigned(ile); ++i)
 								{
-									garaz.push_back(ms.zbuduj(t));
+									garaz.push_back(ms.zbuduj());
 									maszyna_s* szt=garaz.at(e_s);
-									strcpy(szt->marka, nazwa);
+									strcpy(szt->nazwa, nazwa);
+									strcpy(szt->marka, marka);
 									strcpy(szt->model, rasa);
 									szt->rocznik=wiek;
 									szt->moc=masa;
 									e_s++;
 								}
+								cout<<"Maszyna zostala kupiona"<<endl;
 								system("pause");
 								break;
 						case '2':
-								system("cls");
-								ile=0;
-								cout<<"Ile maszyn samojezdnych chcesz sprzedać"<<endl;
-								cin>>ile;
+								system("cls");							
+								cout<<"podaj nazwe maszyny samojezdnej która chcesz sprzedac"<<endl;
+								cin>>nazwa;
+								cout<<"podaj marke maszyny samojezdnej która chcesz sprzedac"<<endl;
+								cin>>marka;
+								cout<<"podaj model maszyny samojezdnej która chcesz sprzedac"<<endl;
+								cin>>rasa;
+								for(size_t i=0; i<garaz.size(); ++i)
+								{
+									maszyna_s* szt=garaz.at(i);
+									if(_stricmp(szt->nazwa, nazwa)==0)
+									{	
+										if(_stricmp(szt->marka, marka)==0)
+										{	
+											if(_stricmp(szt->model, rasa)==0)
+											{	
+												delete garaz.at(i);
+												bank=bank+float(60000);	
+											}
+											else
+											{
+												cout<<"Nie ma takiej maszyny"<<endl;
+												break;
+											}
+										}
+									}
+								}
+								cout<<"Maszyna zostala sprzedana"<<endl;
+								system("pause");
 								break;
 						case '3':
+								system("cls");							
+								cout<<"podaj nazwe maszyny samojezdnej która chcesz naprawic"<<endl;
+								cin>>nazwa;
+								cout<<"podaj marke maszyny samojezdnej która chcesz naprawic"<<endl;
+								cin>>marka;
+								cout<<"podaj model maszyny samojezdnej która chcesz naprawic"<<endl;
+								cin>>rasa;
+								for(size_t i=0; i<garaz.size(); ++i)
+								{
+									maszyna_s* szt=garaz.at(i);
+									if(_stricmp(szt->nazwa, nazwa)==0)
+									{	
+										if(_stricmp(szt->marka, marka)==0)
+										{	
+											if(_stricmp(szt->model, rasa)==0)
+											{	
+												szt->stan=0;
+												bank=bank- rand() %10000;
+											}
+											else
+											{
+												cout<<"Nie ma takiej maszyny"<<endl;
+												break;
+											}
+										}
+									}
+								}
+								cout<<"Maszyna zostala naprawiona"<<endl;
+								system("pause");
 								break;
 						default:
 								break;
@@ -515,58 +574,570 @@ int main()
 				{
 						case '1':
 								system("cls");
-								cout<<"Jakie maszyny chcesz kupic"<<endl;
-								cout<<"agregat --> 0 "<<endl;
-								cin>>t;
 								ile=0;
 								cout<<"Ile maszyn chcesz kupić"<<endl;
 								cin>>ile;
-								for(size_t i=0; i<ile; ++i)
+								cout<<"Podaj nazwe maszyny"<<endl;
+								cin>>nazwa;
+								cout<<"Podaj marke maszyny"<<endl;
+								cin>>rasa;
+								cout<<"Podaj model maszyny"<<endl;
+								cin>>plec;
+								cout<<"Podaj funkcje jaką ma pelnic maszyna"<<endl;
+								cin>>funkcja;
+								bank=bank-ile*float(60000);
+								for(size_t i=0; i<unsigned(ile); ++i)
 								{
-									wiata.push_back(mz.zabuduj(t));
+									wiata.push_back(mz.zabuduj());
+									maszyna_z* szt=wiata.at(e_z);
+									strcpy(szt->nazwa, nazwa);
+									strcpy(szt->marka, marka);
+									strcpy(szt->model, rasa);
+									strcpy(szt->funkcja,funkcja);
+									e_z++;
 								}
+								cout<<"Maszyna zostala kupiona"<<endl;
 								system("pause");
 								break;
 						case '2':
+								system("cls");							
+								cout<<"podaj nazwe maszyny która chcesz sprzedac"<<endl;
+								cin>>nazwa;
+								cout<<"podaj marke maszyny która chcesz sprzedac"<<endl;
+								cin>>marka;
+								cout<<"podaj model maszyny która chcesz sprzedac"<<endl;
+								cin>>rasa;
+								for(size_t i=0; i<wiata.size(); ++i)
+								{
+									maszyna_z* szt=wiata.at(i);
+									if(_stricmp(szt->nazwa, nazwa)==0)
+									{	
+										if(_stricmp(szt->marka, marka)==0)
+										{	
+											if(_stricmp(szt->model, rasa)==0)
+											{	
+												delete wiata.at(i);
+												bank=bank+float(25000);	
+											}
+											else
+											{
+												cout<<"Nie ma takiej maszyny"<<endl;
+												break;
+											}
+										}
+									}
+								}
+								cout<<"Maszyna zostala sprzedane"<<endl;
+								system("pause");
 								break;
 						case '3':
+								system("cls");							
+								cout<<"podaj nazwe maszyny która chcesz naprawic"<<endl;
+								cin>>nazwa;
+								cout<<"podaj marke maszyny która chcesz naprawic"<<endl;
+								cin>>marka;
+								cout<<"podaj model maszyny która chcesz naprawic"<<endl;
+								cin>>rasa;
+								for(size_t i=0; i<wiata.size(); ++i)
+								{
+									maszyna_z* szt=wiata.at(i);
+									if(_stricmp(szt->nazwa, nazwa)==0)
+									{	
+										if(_stricmp(szt->marka, marka)==0)
+										{	
+											if(_stricmp(szt->model, rasa)==0)
+											{	
+												szt->stan=0;
+												bank=bank- rand() %1000;
+											}
+											else
+											{
+												cout<<"Nie ma takiej maszyny"<<endl;
+												break;
+											}
+										}
+									}
+								}
+								cout<<"Maszyna zostala naprawiona"<<endl;
+								system("pause");
 								break;
 						default:
 								break;
 				}
 				break;
 		case '4':
+				system("cls");
+				cout<<" kup --> 1"<<endl<<"sprzedaj -->2"<<endl<<"uprawiaj --> 3"<<endl;
+				cin>>klawisz5;
+				switch(klawisz5)
+				{
+					case '1':
+							system("cls");
+							for(size_t i=0; i<1; ++i)
+							{
+							grunt.push_back(g.karczuj());
+							ziemia* szt=grunt.at(e_g);
+							cout<<"Ile hektarow na jednej dzialce chcesz kupić"<<endl;
+							cin>>szt->powierzchnia;
+							cout<<"Podaj nr dzialki"<<endl;
+							cin>>szt->nrdzialki;
+							bank=bank-szt->powierzchnia*float(80000);
+							szt->stan=0;
+							strcpy(szt->uprawa, "ugor");
+							cout<<"Pole zostało kupione"<<endl;
+							}
+							system("pause");
+							break;
+					case '2':
+							system("cls");							
+							cout<<"Podaj numer dzialki ktore chcesz sprzedac"<<endl;
+							cin>>masa;
+							for(size_t i=0; i<grunt.size(); ++i)
+							{
+								ziemia* szt=grunt.at(i);
+								if(szt->nrdzialki==masa)
+								{	
+									bank=bank+szt->powierzchnia*float(80000);
+									delete grunt.at(i);																				
+								}
+							}
+							cout<<"Pole zostało sprzedane"<<endl;
+							system("pause");		
+							break;
+					case '3':
+							system("cls");							
+							cout<<"podaj nr działki na ktorej chcesz pracować"<<endl;
+							cin>>masa;
+							for(size_t i=0; i<grunt.size(); ++i)
+							{
+								ziemia* szt=grunt.at(i);
+								if(szt->nrdzialki==masa)
+								{										
+									do
+									{
+										system("cls");
+										cout<<"oraj --> 1"<<endl<<"uprawiaj --> 2"<<endl<<"zasiej --> 3"<<endl<<"daj nawoz --> 4"<<endl<<"opryskaj -->5"<<endl<<"zbierz --> 6"<<endl<<"wyjscie --> Q"<<endl;
+										cin>>klawisz6;
+										switch(klawisz6)
+										{
+											case '1':
+													if(szt->stan==6 || szt->stan==0)
+													{
+														system("cls");	
+														cout<<"Podaj nazwe maszyny którym chcesz orac"<<endl;
+														cin>>nazwa;
+														cout<<"Podaj marke maszyny którym chcesz orac"<<endl;
+														cin>>marka;
+														cout<<"Podaj model maszyny którym chcesz orac"<<endl;
+														cin>>marka;
+														for(size_t i=0; i<garaz.size(); ++i)
+														{
+															maszyna_s* szt1=garaz.at(i);
+															if(_stricmp(szt1->nazwa, nazwa)==0)
+															{
+																if(_stricmp(szt1->marka, marka)==0)
+																{	
+																	if(_stricmp(szt1->model, rasa)==0)
+																	{
+																		if(rand() %100==10)
+																		{
+																			szt1->stan=1;
+																			cout<<"Traktor sie popsuł"<<endl;
+																			system("pause");
+																			break;
+																		}
+																	}
+																	else
+																	{
+																		cout<<"Nie ma takiej maszyny"<<endl;
+																		break;
+																	}
+																}
+															}
+														}
+														cout<<"podaj marke pługa którym chcesz orac"<<endl;
+														cin>>nazwa;
+														for(size_t i=0; i<wiata.size(); ++i)
+														{
+															maszyna_z* szt2=wiata.at(i);
+															if(_stricmp(szt2->nazwa, "plug")==0)
+															{	
+																if(_stricmp(szt2->marka, nazwa)==0)
+																{										
+																	if(rand() %100==10)
+																	{
+																		szt2->stan=1;
+																		cout<<"plug sie popsuł"<<endl;
+																		system("pause");
+																		break;
+																	}
+																}
+																else
+																{
+																	cout<<"Nie ma takiej maszyny"<<endl;
+																	break;
+																}
+															}
+														}
+														szt->stan=1;
+														bank=bank-szt->powierzchnia*float(11)*float(4.5);
+														cout<<"zaorano"<<endl;
+													}
+													break;
+											case '2':
+													if(szt->stan==1 || szt->stan==6 || szt->stan==4)
+													{
+														system("cls");	
+														cout<<"Podaj nazwe maszyny którym chcesz uprawiać"<<endl;
+														cin>>nazwa;
+														cout<<"Podaj marke maszyny którym chcesz uprawiać"<<endl;
+														cin>>marka;
+														cout<<"Podaj model maszyny którym chcesz uprawiać"<<endl;
+														cin>>marka;
+														for(size_t i=0; i<garaz.size(); ++i)
+														{
+															maszyna_s* szt1=garaz.at(i);
+															if(_stricmp(szt1->nazwa, nazwa)==0)
+															{
+																if(_stricmp(szt1->marka, marka)==0)
+																{	
+																	if(_stricmp(szt1->model, rasa)==0)
+																	{
+																		if(rand() %100==10)
+																		{
+																			szt1->stan=1;
+																			cout<<"Traktor sie popsuł"<<endl;
+																			system("pause");
+																			break;
+																		}
+																	}
+																	else
+																	{
+																		cout<<"Nie ma takiej maszyny"<<endl;
+																		break;
+																	}
+																}
+															}
+														}
+														cout<<"podaj marke agreagtu którym chcesz uprawiać"<<endl;
+														cin>>nazwa;
+														for(size_t i=0; i<wiata.size(); ++i)
+														{
+															maszyna_z* szt2=wiata.at(i);
+															if(_stricmp(szt2->nazwa, "agregat")==0)
+															{	
+																if(_stricmp(szt2->marka, nazwa)==0)
+																{										
+																	if(rand() %100==10)
+																	{
+																		szt2->stan=1;
+																		cout<<"agregat sie popsuł"<<endl;
+																		system("pause");
+																		break;
+																	}
+																}
+																else
+																{
+																	cout<<"Nie ma takiej maszyny"<<endl;
+																	break;
+																}
+															}
+														}
+														szt->stan=2;
+														bank=bank-szt->powierzchnia*float(9)*float(4.5);
+														cout<<"uprawiono"<<endl;
+													}
+													break;
+											case '3':
+													if(szt->stan==1 || szt->stan==2 || szt->stan==4)
+													{
+														system("cls");	
+														cout<<"Podaj nazwe maszyny którym chcesz siac"<<endl;
+														cin>>nazwa;
+														cout<<"Podaj marke maszyny którym chcesz siac"<<endl;
+														cin>>marka;
+														cout<<"Podaj model maszyny którym chcesz siac"<<endl;
+														cin>>marka;
+														for(size_t i=0; i<garaz.size(); ++i)
+														{
+															maszyna_s* szt1=garaz.at(i);
+															if(_stricmp(szt1->nazwa, nazwa)==0)
+															{
+																if(_stricmp(szt1->marka, marka)==0)
+																{	
+																	if(_stricmp(szt1->model, rasa)==0)
+																	{
+																		if(rand() %100==10)
+																		{
+																			szt1->stan=1;
+																			cout<<"Traktor sie popsuł"<<endl;
+																			system("pause");
+																			break;
+																		}
+																	}
+																	else
+																	{
+																		cout<<"Nie ma takiej maszyny"<<endl;
+																		break;
+																	}
+																}
+															}
+														}
+														cout<<"podaj marke siewnika którym chcesz siac"<<endl;
+														cin>>nazwa;
+														for(size_t i=0; i<wiata.size(); ++i)
+														{
+															maszyna_z* szt2=wiata.at(i);
+															if(_stricmp(szt2->nazwa, "siewnik")==0)
+															{	
+																if(_stricmp(szt2->marka, nazwa)==0)
+																{										
+																	if(rand() %100==10)
+																	{
+																		szt2->stan=1;
+																		cout<<"siewnik sie popsuł"<<endl;
+																		system("pause");
+																		break;
+																	}
+																}
+																else
+																{
+																	cout<<"Nie ma takiej maszyny"<<endl;
+																	break;
+																}
+															}
+														}
+														szt->stan=3;
+														bank=bank-szt->powierzchnia*(float(9)*float(4.5)+float(300));
+														cout<<"Podaj nazwe uprawy"<<endl;
+														cin>>szt->uprawa;
+														cout<<"zasiano"<<endl;
+													}
+													break;
+											case '4':
+													if(szt->stan==1 || szt->stan==2 || szt->stan==3 || szt->stan==4 || szt->stan==5)
+													{
+														system("cls");	
+														cout<<"Podaj nazwe maszyny którym chcesz rozsiewac"<<endl;
+														cin>>nazwa;
+														cout<<"Podaj marke maszyny którym chcesz rozsiewac"<<endl;
+														cin>>marka;
+														cout<<"Podaj model maszyny którym chcesz rozsiewac"<<endl;
+														cin>>marka;
+														for(size_t i=0; i<garaz.size(); ++i)
+														{
+															maszyna_s* szt1=garaz.at(i);
+															if(_stricmp(szt1->nazwa, nazwa)==0)
+															{
+																if(_stricmp(szt1->marka, marka)==0)
+																{	
+																	if(_stricmp(szt1->model, rasa)==0)
+																	{
+																		if(rand() %100==10)
+																		{
+																			szt1->stan=1;
+																			cout<<"Traktor sie popsuł"<<endl;
+																			system("pause");
+																			break;
+																		}
+																	}
+																	else
+																	{
+																		cout<<"Nie ma takiej maszyny"<<endl;
+																		break;
+																	}
+																}
+															}
+														}
+														cout<<"podaj marke rozsiewacza którym chcesz rozsiewac nawoz"<<endl;
+														cin>>nazwa;
+														for(size_t i=0; i<wiata.size(); ++i)
+														{
+															maszyna_z* szt2=wiata.at(i);
+															if(_stricmp(szt2->nazwa, "rozsiewacz")==0)
+															{	
+																if(_stricmp(szt2->marka, nazwa)==0)
+																{										
+																	if(rand() %100==10)
+																	{
+																		szt2->stan=1;
+																		cout<<"rozsiewcz sie popsuł"<<endl;
+																		system("pause");
+																		break;
+																	}
+																}
+																else
+																{
+																	cout<<"Nie ma takiej maszyny"<<endl;
+																	break;
+																}
+															}
+														}
+														szt->stan=4;
+														bank=bank-szt->powierzchnia*(float(2)*float(4.5)+float(300));
+														cout<<"rozwieziono nawoz"<<endl;
+
+													}
+													break;
+											case '5':
+													if(szt->stan==3 || szt->stan==4 || szt->stan==5)
+													{
+														system("cls");	
+														cout<<"Podaj nazwe maszyny którym chcesz pryskac"<<endl;
+														cin>>nazwa;
+														cout<<"Podaj marke maszyny którym chcesz pryskac"<<endl;
+														cin>>marka;
+														cout<<"Podaj model maszyny którym chcesz pryskac"<<endl;
+														cin>>marka;
+														for(size_t i=0; i<garaz.size(); ++i)
+														{
+															maszyna_s* szt1=garaz.at(i);
+															if(_stricmp(szt1->nazwa, nazwa)==0)
+															{
+																if(_stricmp(szt1->marka, marka)==0)
+																{	
+																	if(_stricmp(szt1->model, rasa)==0)
+																	{
+																		if(rand() %100==10)
+																		{
+																			szt1->stan=1;
+																			cout<<"Traktor sie popsuł"<<endl;
+																			system("pause");
+																			break;
+																		}
+																	}
+																	else
+																	{
+																		cout<<"Nie ma takiej maszyny"<<endl;
+																		break;
+																	}
+																}
+															}
+														}
+														cout<<"podaj marke opryskiwacza którym chcesz pryskac"<<endl;
+														cin>>nazwa;
+														for(size_t i=0; i<wiata.size(); ++i)
+														{
+															maszyna_z* szt2=wiata.at(i);
+															if(_stricmp(szt2->nazwa, "opryskiwacz")==0)
+															{	
+																if(_stricmp(szt2->marka, nazwa)==0)
+																{										
+																	if(rand() %100==10)
+																	{
+																		szt2->stan=1;
+																		cout<<"opryskiwacz sie popsuł"<<endl;
+																		system("pause");
+																		break;
+																	}
+																}
+																else
+																{
+																	cout<<"Nie ma takiej maszyny"<<endl;
+																	break;
+																}
+															}
+														}
+														szt->stan=5;
+														bank=bank-szt->powierzchnia*(float(2)*float(4.5)+float(100));
+														cout<<"opryskano"<<endl;
+													}
+													break;		
+											case '6':
+													if(szt->stan==3 || szt->stan==4 || szt->stan==5)
+													{
+														system("cls");	
+														cout<<"Podaj nazwe maszyny którym chcesz zbirac plon"<<endl;
+														cin>>nazwa;
+														cout<<"Podaj marke maszyny którym chcesz zbirac plon"<<endl;
+														cin>>marka;
+														cout<<"Podaj model maszyny którym chcesz zbirac plon"<<endl;
+														cin>>marka;
+														for(size_t i=0; i<garaz.size(); ++i)
+														{
+															maszyna_s* szt1=garaz.at(i);
+															if(_stricmp(szt1->nazwa, nazwa)==0)
+															{
+																if(_stricmp(szt1->marka, marka)==0)
+																{	
+																	if(_stricmp(szt1->model, rasa)==0)
+																	{
+																		if(rand() %100==10)
+																		{
+																			szt1->stan=1;
+																			cout<<"Traktor sie popsuł"<<endl;
+																			system("pause");
+																			break;
+																		}
+																	}
+																	else
+																	{
+																		cout<<"Nie ma takiej maszyny"<<endl;
+																		break;
+																	}
+																}
+															}
+														}
+														szt->stan=6;
+														bank=bank-szt->powierzchnia*float(20)*float(4.5);
+														bank=bank+szt->powierzchnia*float(4500);
+														cout<<"zebrano plon"<<endl;
+													}
+													break;
+											default:
+													break;
+										}
+									}
+									while(klawisz6!='Q');
+								}
+							}
+							system("pause");
+							break;
+					default:
+						break;
+				}
 				break;
 		case '5':
+				cout<<"Stan konta: "<<bank<<endl<<endl;
 				for(size_t i=0; i<chlew.size(); ++i)
 				{
 					obsada* szt=chlew.at(i);
-					cout<<szt->nazwa<<endl;
-					cout<<szt->rasa<<endl;
-					cout<<szt->plec<<endl;
-					cout<<szt->wiek<<endl;
+					cout<<szt->nazwa<<"		";
+					cout<<szt->rasa<<"		";
+					cout<<szt->plec<<"		";
+					cout<<szt->wiek<<"		";
 					cout<<szt->masa<<endl<<endl;
 				}
 				for(size_t i=0; i<garaz.size(); ++i)
 				{
 					maszyna_s* szt=garaz.at(i);
-					cout<<szt->marka<<endl;
-					cout<<szt->model<<endl;
-					cout<<szt->rocznik<<endl;
+					cout<<szt->nazwa<<"		";
+					cout<<szt->marka<<"		";
+					cout<<szt->model<<"		";
+					cout<<szt->rocznik<<"		";
 					cout<<szt->moc<<endl<<endl;
-				}/*
+				}
 				for(size_t i=0; i<wiata.size(); ++i)
 				{
-					delete wiata.at(i);
-					wiata.clear();
-				}*/
+					maszyna_z* szt=wiata.at(i);
+					cout<<szt->nazwa<<"		";
+					cout<<szt->marka<<"		";
+					cout<<szt->model<<endl<<endl;
+				}
+				for(size_t i=0; i<grunt.size(); ++i)
+				{
+					ziemia* szt=grunt.at(i);
+					cout<<szt->nrdzialki<<"		";
+					cout<<szt->powierzchnia<<"		";
+					cout<<szt->uprawa<<endl<<endl;
+				}
 				system("pause");
 				break;
 		default:
 				break;
 		}
 	}
-	while(klawisz1!='Q'  );
+	while(klawisz1!='Q');
 
 
 		for(size_t i=0; i<chlew.size(); ++i)
@@ -588,3 +1159,5 @@ int main()
 	system("pause");
 	return 0;
 }
+
+
